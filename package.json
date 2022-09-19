@@ -1,0 +1,19 @@
+{
+  "name": "bot-tg",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@green-code/music-track-data": "^2.0.3",
+    "dotenv": "^16.0.2",
+    "isomorphic-unfetch": "^3.1.0",
+    "nodemon": "^2.0.19",
+    "spotify-url-info": "^3.1.8",
+    "telegraf": "^4.9.1"
+  }
+}
