@@ -2,6 +2,10 @@ const { Telegraf,
     Markup,
     session
 } = require('telegraf');
+const replaceDisallowedWords = require('disallowed-word-filter');
+const myFilter = new replaceDisallowedWords({
+    additionalWords: 'бл, хуй, похуй, сука',
+  })
 require('dotenv').config()
 const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.start((ctx) => ctx.replyWithHTML('Приветствую! \nCIC - Бот был создан специально для рандомного выбора дежурных 9A класса \n┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ \nДля выбора других двух рандомных дежурных пропишите /random; \n┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ \nДля выбора одного рандомного дежурного пропишите /singleRandom. \n┅ ┅ ┅ ┅ ┅ ┅ ┅ \n<a href="https://t.me/GeemNp">Dimes Production</a>', {
@@ -33,6 +37,16 @@ bot.use((ctx,next)=>{
         max = Math.floor(max);
         return Math.floor(Math.random() * (max - min + 1)) + min;
       }
+
+bot.on("message", async (ctx) => {
+    let filter = await myFilter.check(ctx.message.text, true)
+    if(filter == true) {
+        await ctx.tg.deleteMessage(ctx.chat.id, ctx.message.message_id);
+        await ctx.reply(`🤬 @${ctx.message.from.first_name}, не матерись!`)
+    }else {
+        return
+    }
+})      
 
 
 
@@ -110,7 +124,6 @@ bot.command("admins", async (ctx) => {
     try {
         if (ctx.session?.booksRequest> (new Date().valueOf() - 10 * 60 * 1000)) return await ctx.reply(`⚠ Не так быстро! Повторно использовать команду можно через 10 мин (@${ctx.message.from.username})`);
         ctx.session.booksRequest = new Date().valueOf(); 
-
         await ctx.reply('Bot access on: \nАзим\n┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ \nИслом(OG_DIMES)', Markup.removeKeyboard())   
     }catch(e){
         console.error(e);
