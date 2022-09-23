@@ -4,7 +4,7 @@ const { Telegraf,
 } = require('telegraf');
 const replaceDisallowedWords = require('disallowed-word-filter');
 const myFilter = new replaceDisallowedWords({
-    additionalWords: 'бл, хуй, похуй, сука',
+    additionalWords: 'бл, хуй, похуй, сука, с-у-к-а, п-и-д-о-р',
   })
 require('dotenv').config()
 const bot = new Telegraf(process.env.BOT_TOKEN);
@@ -38,20 +38,11 @@ bot.use((ctx,next)=>{
         return Math.floor(Math.random() * (max - min + 1)) + min;
       }
 
-bot.on("message", async (ctx) => {
-    let filter = await myFilter.check(ctx.message.text, true)
-    if(filter == true) {
-        await ctx.tg.deleteMessage(ctx.chat.id, ctx.message.message_id);
-        await ctx.reply(`🤬 @${ctx.message.from.first_name}, не матерись!`)
-    }else {
-        return
-    }
-})      
+     
 
 
 
 bot.command("random", async (ctx) => {
-    console.log(ctx.message.from);
     if(await ctx.message.from.id == '5103314362') {
         try {
             const users = ['Мухаммад Ислом', 'Ризо', 'Акобирхон', 'Ахроржон', 'Иброхим', 'Шахзода', 'Фирдавс', 'Шахобиддин', 'Азимжон', 'Салохиддин', 'Саидакмал', 'Дилсора', 'Дилором', 'Исломжон', 'Шахноза', 'Назокат', 'Шохжахон', 'Муродбек', 'Рузметов Фирдавс', 'Азиза', 'Хулкарой', 'Билол', 'Шодия', 'Ойбек', 'Умаржон', 'Машрадбек', 'Хаетхон', 'Хусанов Мухаммадюсуф', 'Настарин', 'Ясмина', 'Абдулазиз', 'Юсупов Мухаммадюсуф']
@@ -130,6 +121,42 @@ bot.command("admins", async (ctx) => {
     }
     
 })
+
+bot.on("message", async (ctx) => {
+    try {
+        let filter = await myFilter.check(ctx.message.text, true)
+        if(ctx.message.from.id == '588271676') {
+            return
+        }else if(filter == true){
+            await ctx.tg.deleteMessage(ctx.chat.id, ctx.message.message_id);
+            await ctx.reply(`🤬 @${ctx.message.from.username}, не матерись!`)
+        }else if(ctx.message.text == '😂') {
+            await ctx.replyWithVideo({source: './несмешно-джонсина.gif'});
+        }else {
+            return
+        }
+    }catch(e) {
+        console.error(e);
+    } 
+})  
+
+bot.on("edited_message", async (ctx) => {
+    try {
+        let filter = await myFilter.check(ctx.editedMessage.text, true)
+        if(ctx.editedMessage.from.id == '588271676') {
+            return
+        }else if(filter == true) {
+            await ctx.tg.deleteMessage(ctx.editedMessage.chat.id, ctx.editedMessage.message_id);
+            await ctx.reply(`🤬 @${ctx.editedMessage.from.username}, не матерись!`)
+        }else {
+            return
+        }
+    }catch(e) {
+        console.error(e);
+    }
+    
+})
+
 
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
