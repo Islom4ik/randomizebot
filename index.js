@@ -164,7 +164,7 @@ bot.command("time", async (ctx) => {
                 return
             }
         }
-        await ctx.reply('Вот вся информация о текущей дате:', Markup.removeKeyboard());
+        await ctx.reply(`@${ctx.message.from.username}, вот вся информация о текущей дате:`, Markup.removeKeyboard());
         await ctx.replyWithPhoto({source: './time.png'}, {parse_mode: 'HTML', caption: `🌍 <b>Сегодня:</b> ${data.toLocaleDateString()} \n---------------------------------- \n⌚ <b>Время:</b> \n⌚ <b>Час:</b> ${data.getHours()} \n⌚ <b>Минута:</b> ${data.getMinutes()} \n⌚ <b>Секунда:</b> ${data.getSeconds()} \n⌚ <b>Миллисекунда:</b> ${data.getMilliseconds()} \n⌛ <b>Текущее время:</b> ${data.getHours()}:${data.getMinutes()} \n---------------------------------- \n<b>Месяц</b>: ${monthN()} \n<b>Год</b>: ${data.getFullYear()}`});
     }catch(e) {
         console.error(e);
