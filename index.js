@@ -122,69 +122,12 @@ bot.command("admins", async (ctx) => {
     }
 })
 
-bot.command("time", async (ctx) => {
-    try {
-        let data = new Date();
-        function monthq() {
-            let monthq = data.getMonth() + 1;
-            if(monthq < 10) {
-                let result = '0' + monthq;
-                return result
-            }else {
-                return
-            }
-        }
-        function monthN() {
-            let cmonth = data.getMonth() + 1;
-            if(cmonth == '1') {
-                let mName = 'Январь';
-                return mName
-            }else if(cmonth == '2') {
-                let mName = 'Февраль';
-                return mName
-            }else if(cmonth == '3') {
-                let mName = 'Март';
-                return mName
-            }else if(cmonth == '4') {
-                let mName = 'Апрель';
-                return mName
-            }else if(cmonth == '5') {
-                let mName = 'Май';
-                return mName
-            }else if(cmonth == '6') {
-                let mName = 'Июнь';
-                return mName
-            }else if(cmonth == '7') {
-                let mName = 'Июль';
-                return mName
-            }else if(cmonth == '8') {
-                let mName = 'Август';
-                return mName
-            }else if(cmonth == '9') {
-                let mName = 'Сентябрь';
-                return mName
-            }else if(cmonth == '10') {
-                let mName = 'Ноябрь';
-                return mName
-            }else if(cmonth == '11') {
-                let mName = 'Декабрь';
-                return mName
-            }else {
-                return
-            }
-        }
-        await ctx.reply(`@${ctx.message.from.username}, вот вся информация о текущей дате:`, Markup.removeKeyboard());
-        await ctx.replyWithPhoto({source: './time.png'}, {parse_mode: 'HTML', caption: `🌍 <b>Сегодня:</b> ${data.getDate()}/${monthq()}/${data.getFullYear()} \n---------------------------------- \n⌚ <b>Время:</b> \n⌚ <b>Час:</b> ${data.getHours()} \n⌚ <b>Минута:</b> ${data.getMinutes()} \n⌚ <b>Секунда:</b> ${data.getSeconds()} \n⌚ <b>Миллисекунда:</b> ${data.getMilliseconds()} \n⌛ <b>Текущее время:</b> ${data.getHours()}:${data.getMinutes()} \n---------------------------------- \n<b>Месяц</b>: ${monthN()} \n<b>Год</b>: ${data.getFullYear()}`});
-    }catch(e) {
-        console.error(e);
-    }
-})
-
 bot.on("message", async (ctx) => {
     try {
         let filter = await myFilter.check(ctx.message.text, true)
-        if(ctx.message.from.id == '588271676') {
-            return
+        if(ctx.message.from.id == '5103314362' && filter == true) {
+            await ctx.tg.deleteMessage(ctx.chat.id, ctx.message.message_id);
+            await ctx.reply(`🤬 @${ctx.message.from.username}, не матерись! \n(Все равны перед законом нашего класса!)`)
         }else if(filter == true){
             await ctx.tg.deleteMessage(ctx.chat.id, ctx.message.message_id);
             await ctx.reply(`🤬 @${ctx.message.from.username}, не матерись!`)
@@ -201,8 +144,9 @@ bot.on("message", async (ctx) => {
 bot.on("edited_message", async (ctx) => {
     try {
         let filter = await myFilter.check(ctx.editedMessage.text, true)
-        if(ctx.editedMessage.from.id == '588271676') {
-            return
+        if(ctx.editedMessage.from.id == '5103314362' && filter == true) {
+            await ctx.tg.deleteMessage(ctx.editedMessage.chat.id, ctx.editedMessage.message_id);
+            await ctx.reply(`🤬 @${ctx.editedMessage.from.username}, не матерись! \n(Все равны перед законом нашего класса!)`)
         }else if(filter == true) {
             await ctx.tg.deleteMessage(ctx.editedMessage.chat.id, ctx.editedMessage.message_id);
             await ctx.reply(`🤬 @${ctx.editedMessage.from.username}, не матерись!`)
