@@ -125,7 +125,7 @@ bot.command("admins", async (ctx) => {
 bot.on("message", async (ctx) => {
     try {
         let filter = await myFilter.check(ctx.message.text, true)
-        if(ctx.message.from.id == '5103314362' && filter == true) {
+        if(ctx.message.from.id == '588271676' && filter == true) {
             await ctx.tg.deleteMessage(ctx.chat.id, ctx.message.message_id);
             await ctx.reply(`🤬 @${ctx.message.from.username}, не матерись! \n(Все равны перед законом нашего класса!)`)
         }else if(filter == true){
@@ -144,7 +144,7 @@ bot.on("message", async (ctx) => {
 bot.on("edited_message", async (ctx) => {
     try {
         let filter = await myFilter.check(ctx.editedMessage.text, true)
-        if(ctx.editedMessage.from.id == '5103314362' && filter == true) {
+        if(ctx.editedMessage.from.id == '588271676' && filter == true) {
             await ctx.tg.deleteMessage(ctx.editedMessage.chat.id, ctx.editedMessage.message_id);
             await ctx.reply(`🤬 @${ctx.editedMessage.from.username}, не матерись! \n(Все равны перед законом нашего класса!)`)
         }else if(filter == true) {
