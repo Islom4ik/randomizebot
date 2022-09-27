@@ -122,6 +122,26 @@ bot.command("admins", async (ctx) => {
     }
 })
 
+bot.command("ping", async (ctx) => {
+    if(ctx.message.from.id == '5103314362') {
+        await ctx.tg.sendMessage('-1001759302664', '@b_az1m, узни рандом!');
+        await ctx.reply('Сообщение доставленно!')
+    }else {
+        return
+    }
+})
+
+bot.command("pet", async (ctx) => {
+    if(ctx.message.text.split(' ')[1] == 'hug'){
+        await ctx.replyWithVideo({source: './обнимаха.gif'}, {caption: `@${ctx.message.from.username} обнял(а) ${ctx.message.text.split(' ')[2]}`});
+    }else if(ctx.message.text.split(' ')[1] == 'slap') {
+        await ctx.replyWithVideo({source: './slap.gif'}, {caption: `${ctx.message.text.split(' ')[2]} получил(а) пощечину от @${ctx.message.from.username}`});
+    }else {
+        ctx.reply('Вы не выбрали действие...')
+    }
+     
+})
+
 bot.on("message", async (ctx) => {
     try {
         let filter = await myFilter.check(ctx.message.text, true)
