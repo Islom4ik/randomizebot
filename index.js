@@ -3,6 +3,7 @@ const { Telegraf,
     session
 } = require('telegraf');
 const replaceDisallowedWords = require('disallowed-word-filter');
+const caliph_api = require('caliph-api')
 const myFilter = new replaceDisallowedWords({
     additionalWords: 'с-у-к-а, п-и-д-о-р',
   })
@@ -131,15 +132,42 @@ bot.command("ping", async (ctx) => {
     }
 })
 
+bot.command("petHelp", async (ctx) => {
+    await ctx.reply('ПОМОЩЬ ПО К. PET \n/pet принимает 2 аргумента... \nДля использования пропишите команду: \n/pet [slap(чапалах), hug(обнять)] <@участник> \nПримеры использования: \n/pet slap @ogDimes \n/pet hug @ogDimes')
+})
+
+
 bot.command("pet", async (ctx) => {
     if(ctx.message.text.split(' ')[1] == 'hug'){
+        await ctx.tg.deleteMessage(ctx.chat.id, ctx.message.message_id);
         await ctx.replyWithVideo({source: './обнимаха.gif'}, {caption: `@${ctx.message.from.username} обнял(а) ${ctx.message.text.split(' ')[2]}`});
     }else if(ctx.message.text.split(' ')[1] == 'slap') {
+        await ctx.tg.deleteMessage(ctx.chat.id, ctx.message.message_id);
         await ctx.replyWithVideo({source: './slap.gif'}, {caption: `${ctx.message.text.split(' ')[2]} получил(а) пощечину от @${ctx.message.from.username}`});
     }else {
         ctx.reply('Вы не выбрали действие...')
     }
      
+})
+
+bot.command("unban", async (ctx) => {
+    if(ctx.message.from.id == '5103314362') {
+        await ctx.tg.unbanChatMember('-1001759302664', ctx.message.text.split(' ')[1]);
+        await ctx.tg.unbanChatSenderChat('-1001759302664', ctx.message.text.split(' ')[1]);
+        await ctx.reply('выполнено')
+    }else {
+        return
+    }
+})
+
+bot.command("emojimix", async (ctx) => {
+    try {
+        var result = await caliph_api.other.emojimix(ctx.message.text.split(' ')[1], ctx.message.text.split(' ')[2])
+        await ctx.replyWithPhoto({source: result}, {reply_to_message_id: ctx.message.message_id}, {caption: `${ctx.message.text.split(' ')[1]} + ${ctx.message.text.split(' ')[2]}`})
+    }catch(e) {
+        console.error(e);
+        ctx.reply('Упс... Что-то пошло не так(')
+    }
 })
 
 bot.on("message", async (ctx) => {

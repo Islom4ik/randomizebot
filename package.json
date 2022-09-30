@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "@green-code/music-track-data": "^2.0.3",
+    "caliph-api": "^0.9.4",
     "disallowed-word-filter": "^1.0.2",
     "dotenv": "^16.0.2",
     "isomorphic-unfetch": "^3.1.0",
