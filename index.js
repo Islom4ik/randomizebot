@@ -9,6 +9,7 @@ const myFilter = new replaceDisallowedWords({
   })
 require('dotenv').config()
 const bot = new Telegraf(process.env.BOT_TOKEN);
+const fs = require("fs")
 bot.start((ctx) => ctx.replyWithHTML('Приветствую! \nCIC - Бот был создан специально для рандомного выбора дежурных 9A класса \n┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ \nДля выбора других двух рандомных дежурных пропишите /random; \n┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ \nДля выбора одного рандомного дежурного пропишите /singleRandom \n┅ ┅ ┅ ┅ ┅ ┅ ┅ \n<a href="https://t.me/GeemNp">Dimes Production</a>', {
     disable_web_page_preview: true
 }));
@@ -44,7 +45,7 @@ bot.use((ctx,next)=>{
 
 
 
-bot.command("random", async (ctx) => {
+/* bot.command("random", async (ctx) => {
     if(await ctx.message.from.id == '5103314362') {
         try {
             const users = ['Мухаммад Ислом', 'Ризо', 'Акобирхон', 'Ахроржон', 'Иброхим', 'Шахзода', 'Фирдавс', 'Шахобиддин', 'Азимжон', 'Салохиддин', 'Саидакмал', 'Дилсора', 'Дилором', 'Исломжон', 'Шахноза', 'Назокат', 'Шохжахон', 'Муродбек', 'Рузметов Фирдавс', 'Азиза', 'Хулкарой', 'Билол', 'Шодия', 'Ойбек', 'Умаржон', 'Машрадбек', 'Хаетхон', 'Хусанов Мухаммадюсуф', 'Настарин', 'Ясмина', 'Абдулазиз', 'Юсупов Мухаммадюсуф']
@@ -168,7 +169,78 @@ bot.command("emojimix", async (ctx) => {
         console.error(e);
         ctx.reply('Упс... Что-то пошло не так(')
     }
+}) */
+
+bot.command("singleRandom", async (ctx) => {
+    try {
+        ctx.reply(`@${ctx.message.username}, извините команда не доступна! Идут технические работы...`)
+    }catch(e) {
+        console.error();
+    }
+
 })
+
+bot.command("admins", async (ctx) => {
+    try {
+        ctx.reply(`@${ctx.message.username}, извините команда не доступна! Идут технические работы...`)
+    }catch(e) {
+        console.error();
+    }
+
+})
+
+bot.command("pet", async (ctx) => {
+    try {
+        ctx.reply(`@${ctx.message.username}, извините команда не доступна! Идут технические работы...`)
+    }catch(e) {
+        console.error();
+    }
+
+})
+
+bot.command("emojimix", async (ctx) => {
+    try {
+        ctx.reply(`@${ctx.message.username}, извините команда не доступна! Идут технические работы...`)
+    }catch(e) {
+        console.error();
+    }
+
+})
+
+bot.command("random", async (ctx) => {
+    try {
+        ctx.reply(`@${ctx.message.username}, извините команда не доступна! Идут технические работы...`)
+    }catch(e) {
+        console.error();
+    }
+
+})
+
+bot.command("singlerandom", async (ctx) => {
+        try {
+            ctx.reply(`@${ctx.message.username}, извините команда не доступна! Идут технические работы...`)
+        }catch(e) {
+            console.error();
+        }
+
+})
+
+function database( filename, default_ ){
+    let back = { };
+    
+    back.save = function(){
+      fs.writeFileSync( filename, JSON.stringify( back.body, null, 4 ) )
+    }
+    
+    if ( fs.existsSync( filename ) ) {
+      back.body = JSON.parse( fs.readFileSync( filename, { encoding: 'utf8' } ) );
+    }
+    else{
+      back.body = default_
+      back.save()
+    }
+    return back;
+}
 
 bot.on("message", async (ctx) => {
     try {
@@ -182,8 +254,20 @@ bot.on("message", async (ctx) => {
         }else if(ctx.message.text == '😂') {
             await ctx.replyWithVideo({source: './несмешно-джонсина.gif'});
         }else {
-            return
+            const users = database('users.json', [])
+            let user = await users.body.find(u => u.id == ctx.message.from.id)
+            if (!user) {
+                await users.body.push({
+                    id: ctx.message.from.id,
+                    username: `@${ctx.message.from.username}` || 'Anonim'
+                })
+            await users.save()
+
+            }else {
+                return
+            } 
         }
+        /*  */
     }catch(e) {
         console.error(e);
     } 
