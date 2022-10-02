@@ -173,7 +173,7 @@ bot.command("emojimix", async (ctx) => {
 
 bot.command("singleRandom", async (ctx) => {
     try {
-        ctx.reply(`@${ctx.message.username}, извините команда не доступна! Идут технические работы...`)
+        ctx.reply(`@${ctx.message.from.username}, извините команда не доступна! Идут технические работы...`)
     }catch(e) {
         console.error();
     }
@@ -182,7 +182,7 @@ bot.command("singleRandom", async (ctx) => {
 
 bot.command("admins", async (ctx) => {
     try {
-        ctx.reply(`@${ctx.message.username}, извините команда не доступна! Идут технические работы...`)
+        ctx.reply(`@${ctx.message.from.username}, извините команда не доступна! Идут технические работы...`)
     }catch(e) {
         console.error();
     }
@@ -191,7 +191,7 @@ bot.command("admins", async (ctx) => {
 
 bot.command("pet", async (ctx) => {
     try {
-        ctx.reply(`@${ctx.message.username}, извините команда не доступна! Идут технические работы...`)
+        ctx.reply(`@${ctx.message.from.username}, извините команда не доступна! Идут технические работы...`)
     }catch(e) {
         console.error();
     }
@@ -200,7 +200,7 @@ bot.command("pet", async (ctx) => {
 
 bot.command("emojimix", async (ctx) => {
     try {
-        ctx.reply(`@${ctx.message.username}, извините команда не доступна! Идут технические работы...`)
+        ctx.reply(`@${ctx.message.from.username}, извините команда не доступна! Идут технические работы...`)
     }catch(e) {
         console.error();
     }
@@ -209,7 +209,7 @@ bot.command("emojimix", async (ctx) => {
 
 bot.command("random", async (ctx) => {
     try {
-        ctx.reply(`@${ctx.message.username}, извините команда не доступна! Идут технические работы...`)
+        ctx.reply(`@${ctx.message.from.username}, извините команда не доступна! Идут технические работы...`)
     }catch(e) {
         console.error();
     }
@@ -218,7 +218,7 @@ bot.command("random", async (ctx) => {
 
 bot.command("singlerandom", async (ctx) => {
         try {
-            ctx.reply(`@${ctx.message.username}, извините команда не доступна! Идут технические работы...`)
+            ctx.reply(`@${ctx.message.from.username}, извините команда не доступна! Идут технические работы...`)
         }catch(e) {
             console.error();
         }
