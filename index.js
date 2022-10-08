@@ -126,7 +126,9 @@ bot.command("admins", async (ctx) => {
 
 bot.command("everyone", async ctx => {
     try {
-        ctx.tg.deleteMessage(ctx.message.chat.id, ctx.message.message_id)
+        if (ctx.session?.booksRequest> (new Date().valueOf() - 2 * 60 * 1000)) return await ctx.reply(`⚠ Не так быстро! Повторно использовать команду можно через 2 минуты (@${ctx.message.from.username})`);
+        ctx.session.booksRequest = new Date().valueOf(); 
+        await ctx.tg.deleteMessage(ctx.message.chat.id, ctx.message.message_id)
         let quat = await ctx.replyWithHTML(`Вы уверены что хотите упомянуть всех участников данной группы?`, {
             ...Markup.inlineKeyboard([
                 [Markup.button.callback("Да, уверен!", 'acc')],
@@ -135,22 +137,36 @@ bot.command("everyone", async ctx => {
         })
     
         bot.action('acc', async ctx => {
-            await ctx.tg.deleteMessage(quat.chat.id, quat.message_id);
-            await ctx.answerCbQuery('Ваш запрос успешно обработан', Markup.removeKeyboard());
-            let ping = await ctx.replyWithHTML(`🗿 Все были упомянуты пользователем @${ctx.callbackQuery.from.username}\n‼️Были упомянуты следующие участники группы:\n@GeemNp | @Sh_kami07 | @muhammadyusufxusanov | <a href="tg://user?id=5103314362">𝔂𝓪𝓼𝓶𝓲𝓷𝓪🕊</a> | @shaxmen1 | <a href="tg://user?id=5103314362">Ойбек</a> | @Algin_10 | @b_az1m | @Khamrakulovna_sun | <a href="tg://user?id=5103314362">Hulkaroy</a> | @NeedForAnime | <a href="tg://user?id=1050880283">Шахзода</a> | @champ_dobriy | @senorita_solo | @dilsora_dd`, Markup.inlineKeyboard(
+            try {
+                await ctx.answerCbQuery('Ваш запрос успешно обработан', Markup.removeKeyboard());
+                let ping = await ctx.replyWithHTML(`🗿 Все были упомянуты пользователем @${ctx.callbackQuery.from.username}\n‼️Были упомянуты следующие участники группы:\n@GeemNp | @Sh_kami07 | @muhammadyusufxusanov | <a href="tg://user?id=5103314362">𝔂𝓪𝓼𝓶𝓲𝓷𝓪🕊</a> | @shaxmen1 | <a href="tg://user?id=5103314362">Ойбек</a> | @Algin_10 | @b_az1m | @Khamrakulovna_sun | <a href="tg://user?id=5103314362">Hulkaroy</a> | @NeedForAnime | <a href="tg://user?id=1050880283">Шахзода</a> | @champ_dobriy | @senorita_solo | @dilsora_dd`, Markup.inlineKeyboard(
                 [
                     [Markup.button.callback('Close', 'cl')]
                 ]
-            ))
-            bot.action("cl", async ctx => {
-                ctx.answerCbQuery('Сообщение удалено');
-                await ctx.tg.deleteMessage(ping.chat.id, ping.message_id);
+                ))
+                await bot.action("cl", async ctx => {
+                try {
+                    await ctx.answerCbQuery('Сообщение удалено');
+                    await ctx.tg.deleteMessage(ping.chat.id, ping.message_id);
+                }catch(e) {
+                    console.error(e);
+                }
+                await ctx.tg.deleteMessage(quat.chat.id, quat.message_id);
             })
+            }catch(e) {
+                console.error(e);
+            }
         })
     
-        bot.action('can', async ctx => {
-            await ctx.answerCbQuery('Ваш выбор принят!')
-            await ctx.tg.deleteMessage(quat.chat.id, quat.message_id);
+        await bot.action('can', async ctx => {
+            try {
+                let chatid = await quat.chat.id;
+                let messageid = await quat.message_id;
+                await ctx.answerCbQuery('Ваш выбор принят!');
+                await ctx.tg.deleteMessage(chatid, messageid);
+            }catch(e) {
+                console.error(e);
+            }
         })
     }catch(e) {
         console.error(e);
