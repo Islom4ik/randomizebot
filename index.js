@@ -10,9 +10,7 @@ const myFilter = new replaceDisallowedWords({
 require('dotenv').config()
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const fs = require("fs")
-bot.start((ctx) => ctx.replyWithHTML('Приветствую! \nCIC - Бот был создан специально для рандомного выбора дежурных 9A класса \n┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ \nДля выбора других двух рандомных дежурных пропишите /random; \n┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ \nДля выбора одного рандомного дежурного пропишите /singleRandom \n┅ ┅ ┅ ┅ ┅ ┅ ┅ \n<a href="https://t.me/GeemNp">Dimes Production</a>', {
-    disable_web_page_preview: true
-}));
+bot.start((ctx) => ctx.replyWithHTML('Приветствую! \nCIC - Бот был создан специально для рандомного выбора дежурных 9A класса \n┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ \nДля выбора других двух рандомных дежурных пропишите /random; \n┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ \nДля выбора одного рандомного дежурного пропишите /singleRandom \n┅ ┅ ┅ ┅ ┅ ┅ ┅ \n<a href="https://t.me/GeemNp">Dimes Production</a>', {disable_web_page_preview: true}));
 
 let kb = [
     ['/random', '/singleRandom'],
@@ -22,7 +20,7 @@ let kb = [
 bot.help((ctx) => ctx.reply('/start - запуск бота, \n┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅  \n/help - помощь по боту\n┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ \n/admins - список пользователей с доступом использования бота \n/time - информация о текущей дате\n┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ \nДля выбора других двух рандомных дежурных пропишите /random; \nДля выбора одного рандомного дежурного пропишите /singleRandom'));
 
 
-bot.launch(console.log('Бот активен'));
+bot.launch({dropPendingUpdates: true});
 
 bot.use(session()); 
 
@@ -124,50 +122,53 @@ bot.command("admins", async (ctx) => {
     }
 })
 
+let quat;
+let ping;
+
 bot.command("everyone", async ctx => {
     try {
-        if (ctx.session?.booksRequest> (new Date().valueOf() - 2 * 60 * 1000)) return await ctx.reply(`⚠ Не так быстро! Повторно использовать команду можно через 2 минуты (@${ctx.message.from.username})`);
-        ctx.session.booksRequest = new Date().valueOf(); 
-        await ctx.tg.deleteMessage(ctx.message.chat.id, ctx.message.message_id)
-        let quat = await ctx.replyWithHTML(`Вы уверены что хотите упомянуть всех участников данной группы?`, {
+        await ctx.tg.deleteMessage(ctx.message.chat.id, ctx.message.message_id);
+        quat = await ctx.replyWithHTML(`Вы уверены что хотите упомянуть всех участников данной группы?`, {
             ...Markup.inlineKeyboard([
                 [Markup.button.callback("Да, уверен!", 'acc')],
                 [Markup.button.callback("Нет, я передумал...", 'can')]
             ])
         })
-    
-        bot.action('acc', async ctx => {
-            try {
-                await ctx.answerCbQuery('Ваш запрос успешно обработан', Markup.removeKeyboard());
-                let ping = await ctx.replyWithHTML(`🗿 Все были упомянуты пользователем @${ctx.callbackQuery.from.username}\n‼️Были упомянуты следующие участники группы:\n@GeemNp | @Sh_kami07 | @muhammadyusufxusanov | <a href="tg://user?id=5103314362">𝔂𝓪𝓼𝓶𝓲𝓷𝓪🕊</a> | @shaxmen1 | <a href="tg://user?id=5103314362">Ойбек</a> | @Algin_10 | @b_az1m | @Khamrakulovna_sun | <a href="tg://user?id=5103314362">Hulkaroy</a> | @NeedForAnime | <a href="tg://user?id=1050880283">Шахзода</a> | @champ_dobriy | @senorita_solo | @dilsora_dd`, Markup.inlineKeyboard(
-                [
-                    [Markup.button.callback('Close', 'cl')]
-                ]
-                ))
-                await bot.action("cl", async ctx => {
-                try {
-                    await ctx.answerCbQuery('Сообщение удалено');
-                    await ctx.tg.deleteMessage(ping.chat.id, ping.message_id);
-                }catch(e) {
-                    console.error(e);
-                }
-                await ctx.tg.deleteMessage(quat.chat.id, quat.message_id);
-            })
-            }catch(e) {
-                console.error(e);
-            }
-        })
-    
-        await bot.action('can', async ctx => {
-            try {
-                let chatid = await quat.chat.id;
-                let messageid = await quat.message_id;
-                await ctx.answerCbQuery('Ваш выбор принят!');
-                await ctx.tg.deleteMessage(chatid, messageid);
-            }catch(e) {
-                console.error(e);
-            }
-        })
+    }catch(e) {
+        console.error(e);
+    }
+})
+
+bot.action('acc', async ctx => {
+    try {
+        await ctx.tg.deleteMessage(quat.chat.id, quat.message_id);
+        if (ctx.session?.booksRequest> (new Date().valueOf() - 30000)) return await ctx.reply(`⚠ Не так быстро! Повторно использовать данную кнопку можно через 30 секунд (@${ctx.callbackQuery.from.username})`);
+        ctx.session.booksRequest = new Date().valueOf();
+        await ctx.answerCbQuery('Ваш запрос успешно обработан', Markup.removeKeyboard());
+        ping = await ctx.replyWithHTML(`🗿 Все участники были упомянуты пользователем @${ctx.callbackQuery.from.username}\n‼️Были упомянуты следующие участники группы:\n@GeemNp | @Sh_kami07 | @muhammadyusufxusanov | <a href="tg://user?id=5202225997">𝔂𝓪𝓼𝓶𝓲𝓷𝓪🕊</a> | @shaxmen1 | <a href="tg://user?id=1472635950">Ойбек</a> | @Algin_10 | @b_az1m | @Khamrakulovna_sun | <a href="tg://user?id=5380436836">Hulkaroy</a> | @NeedForAnime | <a href="tg://user?id=1050880283">Шахзода</a> | @champ_dobriy | @senorita_solo | @dilsora_dd`, Markup.inlineKeyboard(
+        [
+            [Markup.button.callback('Close', 'cl')]
+        ]
+        ))
+        await bot.action("cl", async ctx => {
+        try {
+            await ctx.answerCbQuery('Сообщение удалено');
+            await ctx.tg.deleteMessage(ping.chat.id, ping.message_id);
+        }catch(e) {
+            console.error(e);
+        }
+    })
+    }catch(e) {
+        console.error(e);
+    }
+})
+
+bot.action('can', async ctx => {
+    try {
+        let chatid = await quat.chat.id;
+        let messageid = await quat.message_id;
+        await ctx.answerCbQuery('Ваш выбор принят!');
+        await ctx.tg.deleteMessage(chatid, messageid);
     }catch(e) {
         console.error(e);
     }
