@@ -10,7 +10,14 @@ const myFilter = new replaceDisallowedWords({
 require('dotenv').config()
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const fs = require("fs")
+const { MongoClient } = require('mongodb');
 bot.start((ctx) => ctx.replyWithHTML('Приветствую! \nCIC - Бот был создан специально для рандомного выбора дежурных 9A класса \n┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ \nДля выбора других двух рандомных дежурных пропишите /random; \n┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ ┅ \nДля выбора одного рандомного дежурного пропишите /singleRandom \n┅ ┅ ┅ ┅ ┅ ┅ ┅ \n<a href="https://t.me/GeemNp">Dimes Production</a>', {disable_web_page_preview: true}));
+
+const url = 'mongodb+srv://Muhammad007:Muhammad007@database.3dodl7a.mongodb.net';
+const client = new MongoClient(url);
+client.connect();
+const db = client.db('bot');
+const collection = db.collection('users');
 
 let kb = [
     ['/random', '/singleRandom'],
@@ -192,16 +199,6 @@ bot.command("pet", async (ctx) => {
      
 })
 
-bot.command("unban", async (ctx) => {
-    if(ctx.message.from.id == '5103314362') {
-        await ctx.tg.unbanChatMember('-1001759302664', ctx.message.text.split(' ')[1]);
-        await ctx.tg.unbanChatSenderChat('-1001759302664', ctx.message.text.split(' ')[1]);
-        await ctx.reply('выполнено')
-    }else {
-        return
-    }
-})
-
 bot.command("emojimix", async (ctx) => {
     try {
         var result = await caliph_api.other.emojimix(ctx.message.text.split(' ')[1], ctx.message.text.split(' ')[2])
@@ -212,124 +209,16 @@ bot.command("emojimix", async (ctx) => {
     }
 })
 
-bot.command("singleRandom", async (ctx) => {
-    try {
-        ctx.reply(`@${ctx.message.from.username}, извините команда не доступна! Идут технические работы...`)
-    }catch(e) {
-        console.error();
-    }
-
-})
-
-bot.command("admins", async (ctx) => {
-    try {
-        ctx.reply(`@${ctx.message.from.username}, извините команда не доступна! Идут технические работы...`)
-    }catch(e) {
-        console.error();
-    }
-
-})
-
-bot.command("pet", async (ctx) => {
-    try {
-        ctx.reply(`@${ctx.message.from.username}, извините команда не доступна! Идут технические работы...`)
-    }catch(e) {
-        console.error();
-    }
-
-})
-
-bot.command("emojimix", async (ctx) => {
-    try {
-        ctx.reply(`@${ctx.message.from.username}, извините команда не доступна! Идут технические работы...`)
-    }catch(e) {
-        console.error();
-    }
-
-})
-
-bot.command("random", async (ctx) => {
-    try {
-        ctx.reply(`@${ctx.message.from.username}, извините команда не доступна! Идут технические работы...`)
-    }catch(e) {
-        console.error();
-    }
-
-})
-
-bot.command("singlerandom", async (ctx) => {
-        try {
-            ctx.reply(`@${ctx.message.from.username}, извините команда не доступна! Идут технические работы...`)
-        }catch(e) {
-            console.error();
-        }
-
-})
-
-function database( filename, default_ ){
-    let back = { };
-    
-    back.save = function(){
-      fs.writeFileSync( filename, JSON.stringify( back.body, null, 4 ) )
-    }
-    
-    if ( fs.existsSync( filename ) ) {
-      back.body = JSON.parse( fs.readFileSync( filename, { encoding: 'utf8' } ) );
-    }
-    else{
-      back.body = default_
-      back.save()
-    }
-    return back;
-}
-
 bot.on("message", async (ctx) => {
     try {
-        let filter = await myFilter.check(ctx.message.text, true)
-        if(ctx.message.from.id == '588271676' && filter == true) {
-            await ctx.tg.deleteMessage(ctx.chat.id, ctx.message.message_id);
-            await ctx.reply(`🤬 @${ctx.message.from.username}, не матерись! \n(Все равны перед законом нашего класса!)`)
-        }else if(filter == true){
-            await ctx.tg.deleteMessage(ctx.chat.id, ctx.message.message_id);
-            await ctx.reply(`🤬 @${ctx.message.from.username}, не матерись!`)
-        }else if(ctx.message.text == '😂') {
+        if(ctx.message.text == '😂') {
             await ctx.replyWithVideo({source: './несмешно-джонсина.gif'});
-        }else {
-            const users = database('users.json', [])
-            let user = await users.body.find(u => u.id == ctx.message.from.id)
-            if (!user) {
-                await users.body.push({
-                    id: ctx.message.from.id,
-                    name: `@${ctx.message.from.first_name}` || 'Anonim'
-                })
-            await users.save()
-
-            }else {
-                return
-            } 
-        }
-        /*  */
-    }catch(e) {
-        console.error(e);
-    } 
-})  
-
-bot.on("edited_message", async (ctx) => {
-    try {
-        let filter = await myFilter.check(ctx.editedMessage.text, true)
-        if(ctx.editedMessage.from.id == '588271676' && filter == true) {
-            await ctx.tg.deleteMessage(ctx.editedMessage.chat.id, ctx.editedMessage.message_id);
-            await ctx.reply(`🤬 @${ctx.editedMessage.from.username}, не матерись! \n(Все равны перед законом нашего класса!)`)
-        }else if(filter == true) {
-            await ctx.tg.deleteMessage(ctx.editedMessage.chat.id, ctx.editedMessage.message_id);
-            await ctx.reply(`🤬 @${ctx.editedMessage.from.username}, не матерись!`)
         }else {
             return
         }
     }catch(e) {
         console.error(e);
-    }
-    
+    } 
 })
 
 
