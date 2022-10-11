@@ -152,11 +152,11 @@ bot.action('acc', async ctx => {
         if (ctx.session?.booksRequest> (new Date().valueOf() - 30000)) return await ctx.reply(`⚠ Не так быстро! Повторно использовать данную кнопку можно через 30 секунд (@${ctx.callbackQuery.from.username})`);
         ctx.session.booksRequest = new Date().valueOf();
         await ctx.answerCbQuery('Ваш запрос успешно обработан', Markup.removeKeyboard());
-        ping = await ctx.replyWithHTML(`🗿 Все участники были упомянуты пользователем @${ctx.callbackQuery.from.username}\n‼️Были упомянуты следующие участники группы:\n@GeemNp | @Sh_kami07 | @muhammadyusufxusanov | <a href="tg://user?id=5202225997">𝔂𝓪𝓼𝓶𝓲𝓷𝓪🕊</a> | @shaxmen1 | <a href="tg://user?id=1472635950">Ойбек</a> | @Algin_10 | @b_az1m | @Khamrakulovna_sun | <a href="tg://user?id=5380436836">Hulkaroy</a> | @NeedForAnime | <a href="tg://user?id=1050880283">Шахзода</a> | @champ_dobriy | @senorita_solo | @dilsora_dd`, Markup.inlineKeyboard(
+        ping = await ctx.replyWithHTML(`🗿 Все участники были упомянуты пользователем @${ctx.callbackQuery.from.username}\n‼️Были упомянуты следующие участники группы:\n@OG_DIMES | @Sh_kami07 | @muhammadyusufxusanov | @shaxmen1 | <a href="tg://user?id=1472635950">Ойбек</a> | @Algin_10 | @b_az1m | @Khamrakulovna_sun | <a href="tg://user?id=5380436836">Hulkaroy</a> | @NeedForAnime | <a href="tg://user?id=1050880283">Шахзода</a> | @champ_dobriy | @senorita_solo | @dilsora_dd`, {...Markup.inlineKeyboard(
         [
             [Markup.button.callback('Close', 'cl')]
         ]
-        ))
+        ), disable_notification: false})
         await bot.action("cl", async ctx => {
         try {
             await ctx.answerCbQuery('Сообщение удалено');
